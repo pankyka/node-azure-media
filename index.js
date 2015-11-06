@@ -159,12 +159,14 @@ function AzureAPI(config) {
         }, function (err, res) {
             var objs = [];
             if (res.statusCode == 200) {
-                var data = JSON.parse(res.body).d.results;
+                var data = JSON.parse(res.body);
+                var count = data.d.__count;
+                data = data.d.results;
                 data.forEach(function (rawd) {
                     var dobj = models[model].create(rawd);
                     objs.push(dobj);
                 });
-                cb(err, objs);
+                cb(err, objs, count);
             } else {
                 cb(err || 'Expected 200 status, received: ' + res.statusCode + '\n' + res.body);
             }
